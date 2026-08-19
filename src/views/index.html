@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="{{ description }}" />
+    <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav>
+        <a class="brand" href="/">espresso</a>
+        <a href="/users">Users</a>
+        <a href="/api/users">API</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <h1>{{ title }}</h1>
+        <p>{{ tagline }}</p>
+        <code class="snippet">ctx.json({ hello: 'world' })</code>
+      </section>
+
+      <section class="cards">
+        <div class="card">
+          <h2>Declarative</h2>
+          <p>Routes read like a sentence. No boilerplate.</p>
+        </div>
+        <div class="card">
+          <h2>Typed</h2>
+          <p>Route params, query and body are inferred.</p>
+        </div>
+        <div class="card">
+          <h2>Lightweight</h2>
+          <p>Zero dependencies. Runs on plain Node.js.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>espresso &middot; a pragmatic framework</span>
+    </footer>
+
+    <script src="/assets/js/app.ts"></script>
+  </body>
+</html>
