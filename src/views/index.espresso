@@ -1,0 +1,26 @@
+{{ partial 'header' }}
+
+    <main class="container">
+      <section class="hero">
+        <h1>{{ title }}</h1>
+        <p>{{ tagline }}</p>
+        <code class="snippet">ctx.json({ hello: 'world' })</code>
+      </section>
+
+      <section class="cards">
+        <div class="card">
+          <h2>Declarative</h2>
+          <p>Routes read like a sentence. No boilerplate.</p>
+        </div>
+        <div class="card">
+          <h2>Typed</h2>
+          <p>Route params, query and body are inferred.</p>
+        </div>
+        <div class="card">
+          <h2>Lightweight</h2>
+          <p>Zero dependencies. Runs on plain Node.js.</p>
+        </div>
+      </section>
+    </main>
+
+{{ partial 'footer' }}

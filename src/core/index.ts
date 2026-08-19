@@ -8,3 +8,4 @@ export type { LoggerOptions, LogEntry } from './logger.ts';
 export type { Middleware, Handler } from './routing.ts';
 export type { ParamsFromPath } from './types.ts';
 export * from './libs/mongo/index.ts';
+export * from './libs/templating/index.ts';

@@ -73,7 +73,7 @@ test('views render with interpolation', async () => {
   const res = await app.handle(new Request('http://localhost/'));
   assert.equal(res.status, 200);
   const html = await res.text();
-  assert.match(html, /<title>Test<\/title>/);
+  assert.match(html, /<title>Test - espresso<\/title>/);
 });
 
 test('static files are served', async () => {

@@ -1,5 +1,4 @@
-import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { Templating } from './libs/templating/index.ts';
 
 /** Response state the handler can mutate before returning a value. */
 export interface SetState {
@@ -26,8 +25,10 @@ export class Context<P extends Record<string, string> = Record<string, string>> 
   readonly set: SetState = { status: 200, headers: {}, cookies: {} };
   private bodyPromise: Promise<unknown> | null = null;
   private readonly viewsDir: string;
+  private readonly partialsDir: string;
+  private templating: Templating | null = null;
 
-  constructor(request: Request, params: P, viewsDir: string) {
+  constructor(request: Request, params: P, viewsDir: string, partialsDir?: string) {
     this.request = request;
     this.params = params;
     const url = new URL(request.url);
@@ -37,6 +38,7 @@ export class Context<P extends Record<string, string> = Record<string, string>> 
     this.headers = request.headers;
     this.cookies = parseCookies(request.headers.get('cookie') ?? '');
     this.viewsDir = viewsDir;
+    this.partialsDir = partialsDir ?? `${viewsDir}/partials`;
   }
 
   /**
@@ -61,14 +63,23 @@ export class Context<P extends Record<string, string> = Record<string, string>> 
     this.respond(null, '', status, { location });
 
   /**
-   * Renders a plain HTML file from the views directory and interpolates
-   * `{{ key }}` (dot-paths like `{{ user.name }}` supported).
+   * Renders a view from the views directory using the templating engine.
+   * Supports `.espresso` and `.html` files, partials from `views/partials`,
+   * interpolation, `#each`, `#if` and `#section` blocks.
    */
   view = async (name: string, data?: Record<string, unknown>): Promise<Response> => {
-    const file = resolve(this.viewsDir, name.endsWith('.html') ? name : `${name}.html`);
-    const raw = await readFile(file, 'utf8');
-    return this.html(interpolate(raw, data));
+    const html = await this.getTemplating().renderFile(name, data ?? {});
+    return this.html(html);
   };
+
+  /** The lazily created templating engine. */
+  getTemplating(): Templating {
+    this.templating ??= new Templating({
+      viewsDir: this.viewsDir,
+      partialsDir: this.partialsDir,
+    });
+    return this.templating;
+  }
 
   private respond(
     body: string | null,
@@ -116,15 +127,4 @@ function parseCookies(header: string): Record<string, string> {
     }
   }
   return out;
-}
-
-function interpolate(template: string, data?: Record<string, unknown>): string {
-  if (!data) return template;
-  return template.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_match, key: string) => {
-    const value = key.split('.').reduce<unknown>((acc, part) => {
-      if (acc === undefined || acc === null) return undefined;
-      return (acc as Record<string, unknown>)[part];
-    }, data);
-    return value === undefined || value === null ? '' : String(value);
-  });
 }

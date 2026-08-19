@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <title>{{ #if title }}{{ title }} - espresso{{ else }}espresso{{ /if }}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav>
+        <a class="brand" href="/">espresso</a>
+        <a href="/users">Users</a>
+        <a href="/api/users">API</a>
+      </nav>
+    </header>

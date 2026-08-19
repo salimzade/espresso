@@ -18,6 +18,8 @@ import { serveStaticFile } from './static.ts';
 export interface EspressoConfig {
   /** Directory for `ctx.view()` HTML templates. Default `src/views`. */
   viewsDir?: string;
+  /** Directory for template partials. Default `viewsDir/partials`. */
+  partialsDir?: string;
   /** Directory served by `.assets()`. Default `src/assets`. */
   assetsDir?: string;
   /** Directory served by `.public()`. Default `src/public`. */
@@ -45,8 +47,10 @@ export class Espresso {
   private server: ReturnType<typeof createServer> | null = null;
 
   constructor(config: EspressoConfig = {}) {
+    const viewsDir = config.viewsDir ?? 'src/views';
     this.config = {
-      viewsDir: config.viewsDir ?? 'src/views',
+      viewsDir,
+      partialsDir: config.partialsDir ?? `${viewsDir}/partials`,
       assetsDir: config.assetsDir ?? 'src/assets',
       publicDir: config.publicDir ?? 'src/public',
     };
@@ -143,7 +147,7 @@ export class Espresso {
   /** Full request pipeline. Works with any web-standard `Request`. */
   async handle(request: Request): Promise<Response> {
     const url = new URL(request.url);
-    const ctx = new Context(request, {}, this.config.viewsDir);
+    const ctx = new Context(request, {}, this.config.viewsDir, this.config.partialsDir);
     try {
       const chain = this.middlewares.filter((mw) =>
         mw.path === null ? true : pathnameMatches(mw.path, url.pathname),

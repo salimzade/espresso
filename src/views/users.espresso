@@ -1,0 +1,30 @@
+{{ partial 'header' }}
+
+    <main class="container">
+      <h1>{{ title }}</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ #each users }}
+          <tr>
+            <td>{{ @index }}</td>
+            <td>{{ id }}</td>
+            <td>{{ name }}</td>
+            <td><a href="mailto:{{ email }}">{{ email }}</a></td>
+          </tr>
+          {{ else }}
+          <tr><td colspan="4">No users yet.</td></tr>
+          {{ /each }}
+        </tbody>
+      </table>
+      <p class="muted">Fetched from <code>/api/users</code>.</p>
+    </main>
+
+{{ partial 'footer' }}
